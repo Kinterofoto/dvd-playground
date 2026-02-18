@@ -34,3 +34,32 @@ body {
 ::selection {
   background: rgba(255, 255, 255, 0.08);
 }
+
+/* Metallic chrome text */
+.text-chrome {
+  background: linear-gradient(
+    135deg,
+    #71717a 0%,
+    #d4d4d8 25%,
+    #a1a1aa 40%,
+    #e4e4e7 50%,
+    #a1a1aa 60%,
+    #d4d4d8 75%,
+    #71717a 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: chrome-shift 6s ease-in-out infinite;
+}
+
+@keyframes chrome-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(200%) skewX(-12deg); }
+}
