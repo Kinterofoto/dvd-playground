@@ -1,0 +1,10 @@
+fastapi>=0.115.0
+uvicorn>=0.30.0
+numpy<2
+opencv-python-headless
+tqdm
+nano-vectordb
+requests
+yt-dlp
+openai
+pydantic>=2.0
