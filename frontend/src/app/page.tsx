@@ -1,13 +1,15 @@
 "use client";
 
-import { SetupForm } from "../components/setup-form";
-import { Terminal } from "../components/terminal/terminal";
+import { ChatInput } from "../components/chat/chat-input";
+import { ChatView } from "../components/chat/chat-view";
+import { SetupBar } from "../components/setup-form";
 
 export default function Home() {
   return (
-    <main className="h-screen flex flex-col bg-[var(--bg-primary)]">
-      <SetupForm />
-      <Terminal />
+    <main className="h-screen flex flex-col bg-[#0a0a0a]">
+      <SetupBar />
+      <ChatView />
+      <ChatInput />
     </main>
   );
 }

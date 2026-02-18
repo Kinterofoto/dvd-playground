@@ -14,22 +14,24 @@ export interface SSEEvent {
   name?: string;
   arguments?: string;
   video_id?: string;
-  step?: string;
+  frames?: string[];
 }
 
-export type LineType =
-  | "system"
-  | "user"
-  | "thinking"
-  | "tool_call"
-  | "tool_result"
-  | "answer"
-  | "error"
-  | "status";
+export type MessageRole = "user" | "assistant" | "status" | "error";
 
-export interface TerminalLine {
+export interface ChatMessage {
   id: string;
-  type: LineType;
+  role: MessageRole;
   content: string;
+  thinking?: string;
+  toolCalls?: ToolCallInfo[];
+  frames?: string[];
   timestamp: number;
+}
+
+export interface ToolCallInfo {
+  name: string;
+  arguments: string;
+  result?: string;
+  frames?: string[];
 }

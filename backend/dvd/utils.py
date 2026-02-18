@@ -9,7 +9,10 @@ from mimetypes import guess_type
 
 import cv2
 import requests
-from azure.identity import AzureCliCredential
+try:
+    from azure.identity import AzureCliCredential
+except ImportError:
+    AzureCliCredential = None
 
 
 def retry_with_exponential_backoff(

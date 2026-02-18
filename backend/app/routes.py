@@ -1,7 +1,8 @@
 import json
+import os
 
 from fastapi import APIRouter, Header, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 import dvd.config as config
 from dvd.dvd_core import DVDCoreAgent
@@ -75,3 +76,17 @@ async def query_video(
 async def video_status(video_id: str):
     status = check_video_status(video_id)
     return StatusResponse(status=status, video_id=video_id)
+
+
+@router.get("/frames/{video_id}/{frame_name}")
+async def get_frame(video_id: str, frame_name: str):
+    """Serve a video frame image."""
+    # Sanitize inputs to prevent path traversal
+    if ".." in video_id or ".." in frame_name or "/" in frame_name:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    frame_path = os.path.join(
+        config.VIDEO_DATABASE_FOLDER, video_id, "frames", frame_name
+    )
+    if not os.path.isfile(frame_path):
+        raise HTTPException(status_code=404, detail="Frame not found")
+    return FileResponse(frame_path, media_type="image/jpeg")

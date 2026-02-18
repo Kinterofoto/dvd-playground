@@ -1,10 +1,13 @@
 import { SSEEvent } from "./types";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
-async function* parseSSEStream(
-  response: Response
-): AsyncGenerator<SSEEvent> {
+export function getFrameUrl(path: string): string {
+  return `${BACKEND_URL}${path}`;
+}
+
+async function* parseSSEStream(response: Response): AsyncGenerator<SSEEvent> {
   const reader = response.body?.getReader();
   if (!reader) throw new Error("No response body");
 
@@ -16,7 +19,6 @@ async function* parseSSEStream(
     if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-
     const lines = buffer.split("\n");
     buffer = lines.pop() || "";
 
@@ -24,10 +26,9 @@ async function* parseSSEStream(
       const trimmed = line.trim();
       if (trimmed.startsWith("data: ")) {
         try {
-          const data = JSON.parse(trimmed.slice(6));
-          yield data as SSEEvent;
+          yield JSON.parse(trimmed.slice(6)) as SSEEvent;
         } catch {
-          // skip malformed JSON
+          // skip
         }
       }
     }
@@ -48,12 +49,7 @@ export async function* streamProcess(
     body: JSON.stringify({ video_url: videoUrl }),
     signal,
   });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Process failed: ${text}`);
-  }
-
+  if (!response.ok) throw new Error(await response.text());
   yield* parseSSEStream(response);
 }
 
@@ -72,11 +68,6 @@ export async function* streamQuery(
     body: JSON.stringify({ video_id: videoId, question }),
     signal,
   });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Query failed: ${text}`);
-  }
-
+  if (!response.ok) throw new Error(await response.text());
   yield* parseSSEStream(response);
 }
