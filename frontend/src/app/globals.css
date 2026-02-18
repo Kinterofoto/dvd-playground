@@ -59,7 +59,12 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%) skewX(-12deg); }
-  100% { transform: translateX(200%) skewX(-12deg); }
+@keyframes spin3d {
+  0%   { transform: rotateX(-20deg) rotateY(0deg); }
+  100% { transform: rotateX(-20deg) rotateY(360deg); }
+}
+
+@keyframes spin3d-reverse {
+  0%   { transform: rotateZ(0deg) rotateX(45deg); }
+  100% { transform: rotateZ(360deg) rotateX(45deg); }
 }

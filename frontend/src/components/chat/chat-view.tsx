@@ -4,25 +4,53 @@ import { useEffect, useRef } from "react";
 import { useChatStore } from "../../store/terminal-store";
 import { ChatMessageBubble } from "./chat-message";
 
+function WireframeShape() {
+  return (
+    <div className="perspective-[800px] w-40 h-40 mb-8">
+      <div className="w-full h-full animate-[spin3d_12s_linear_infinite] [transform-style:preserve-3d]">
+        {/* Cube faces - wireframe style */}
+        {[
+          "rotateY(0deg)   translateZ(40px)",
+          "rotateY(180deg) translateZ(40px)",
+          "rotateY(90deg)  translateZ(40px)",
+          "rotateY(-90deg) translateZ(40px)",
+          "rotateX(90deg)  translateZ(40px)",
+          "rotateX(-90deg) translateZ(40px)",
+        ].map((transform, i) => (
+          <div
+            key={i}
+            className="absolute inset-[30px] border border-zinc-700/25"
+            style={{ transform, backfaceVisibility: "visible" }}
+          />
+        ))}
+
+        {/* Inner rotated cube */}
+        <div className="absolute inset-0 animate-[spin3d-reverse_8s_linear_infinite] [transform-style:preserve-3d]">
+          {[
+            "rotateY(0deg)   translateZ(22px)",
+            "rotateY(180deg) translateZ(22px)",
+            "rotateY(90deg)  translateZ(22px)",
+            "rotateY(-90deg) translateZ(22px)",
+            "rotateX(90deg)  translateZ(22px)",
+            "rotateX(-90deg) translateZ(22px)",
+          ].map((transform, i) => (
+            <div
+              key={i}
+              className="absolute inset-[45px] border border-zinc-600/15"
+              style={{ transform, backfaceVisibility: "visible" }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Onboarding() {
   return (
-    <div className="flex flex-col items-center justify-center pt-28 pb-16 select-none">
-      {/* Abstract metallic orb */}
-      <div className="relative w-28 h-28 mb-10">
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-300/10 via-zinc-500/5 to-transparent blur-2xl" />
-        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-zinc-400/8 via-transparent to-zinc-600/5" />
-        <div className="absolute inset-0 rounded-full border border-zinc-700/20" />
-        <div className="absolute inset-[3px] rounded-full border border-zinc-600/10" />
-        {/* Reflection sweep */}
-        <div className="absolute inset-0 rounded-full overflow-hidden">
-          <div className="absolute -inset-full animate-[shimmer_4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/[0.03] to-transparent skew-x-12" />
-        </div>
-        {/* Center mark */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-8 bg-gradient-to-b from-transparent via-zinc-500/30 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-px w-8 bg-gradient-to-r from-transparent via-zinc-500/30 to-transparent" />
-      </div>
+    <div className="flex flex-col items-center justify-center pt-24 pb-16 select-none">
+      <WireframeShape />
 
-      {/* Title with metallic gradient */}
       <h1 className="text-chrome text-lg tracking-[0.3em] uppercase font-light mb-4">
         dvd
       </h1>
@@ -31,17 +59,14 @@ function Onboarding() {
         deep video discovery
       </p>
 
-      {/* Thin decorative line */}
       <div className="w-32 h-px bg-gradient-to-r from-transparent via-zinc-700/40 to-transparent mb-8" />
 
-      {/* Steps */}
       <div className="flex flex-col gap-3 text-center">
         <Step n="01" text="enter your openai api key" />
         <Step n="02" text="paste a youtube url" />
         <Step n="03" text="ask anything about the video" />
       </div>
 
-      {/* Bottom accent */}
       <div className="mt-12 flex items-center gap-3">
         <div className="w-6 h-px bg-zinc-800" />
         <span className="text-[9px] text-zinc-700 tracking-widest uppercase">
