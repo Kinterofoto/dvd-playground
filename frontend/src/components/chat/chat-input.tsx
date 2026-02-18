@@ -61,13 +61,24 @@ export function ChatInput() {
         }
       } catch (err) {
         if (!abort.signal.aborted) {
-          addMessage("error", err instanceof Error ? err.message : "Connection failed");
+          addMessage(
+            "error",
+            err instanceof Error ? err.message : "connection failed"
+          );
         }
       } finally {
         setQuerying(false);
       }
     },
-    [apiKey, addMessage, appendToLastAssistant, addToolCallToLast, updateLastToolResult, addFramesToLastTool, setQuerying]
+    [
+      apiKey,
+      addMessage,
+      appendToLastAssistant,
+      addToolCallToLast,
+      updateLastToolResult,
+      addFramesToLastTool,
+      setQuerying,
+    ]
   );
 
   const handleSubmit = useCallback(async () => {
@@ -77,13 +88,11 @@ export function ChatInput() {
     addMessage("user", q);
     setQuestion("");
 
-    // If video already processed, go straight to query
     if (videoId) {
       await runQuery(videoId, q);
       return;
     }
 
-    // Process video first
     const abort = new AbortController();
     abortRef.current = abort;
     setProcessing(true);
@@ -96,14 +105,17 @@ export function ChatInput() {
         } else if (event.type === "done") {
           vid = event.video_id || null;
         } else if (event.type === "error") {
-          addMessage("error", event.message || "Processing failed");
+          addMessage("error", event.message || "processing failed");
           setProcessing(false);
           return;
         }
       }
     } catch (err) {
       if (!abort.signal.aborted) {
-        addMessage("error", err instanceof Error ? err.message : "Connection failed");
+        addMessage(
+          "error",
+          err instanceof Error ? err.message : "connection failed"
+        );
       }
       setProcessing(false);
       return;
@@ -111,20 +123,28 @@ export function ChatInput() {
 
     setProcessing(false);
     if (!vid) {
-      addMessage("error", "No video ID returned");
+      addMessage("error", "no video id returned");
       return;
     }
 
     setVideoId(vid);
-    addMessage("status", "Video ready. Analyzing...");
     await runQuery(vid, q);
-  }, [question, apiKey, videoUrl, videoId, addMessage, setProcessing, setVideoId, runQuery]);
+  }, [
+    question,
+    apiKey,
+    videoUrl,
+    videoId,
+    addMessage,
+    setProcessing,
+    setVideoId,
+    runQuery,
+  ]);
 
   const handleAbort = useCallback(() => {
     abortRef.current?.abort();
     setProcessing(false);
     setQuerying(false);
-    addMessage("status", "Aborted");
+    addMessage("status", "aborted");
   }, [addMessage, setProcessing, setQuerying]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -137,37 +157,36 @@ export function ChatInput() {
   const ready = !!apiKey && !!videoUrl;
 
   return (
-    <div className="border-t border-[#2a2a2a] bg-[#0a0a0a] px-4 py-3">
-      <div className="flex gap-2 max-w-4xl mx-auto">
+    <div className="border-t border-[var(--border)] bg-[var(--bg-1)]">
+      <div className="flex items-center gap-3 max-w-3xl mx-auto px-4 h-12">
+        <span className="text-[10px] text-[var(--text-3)] font-mono shrink-0">
+          {">"}
+        </span>
         <input
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-            !ready
-              ? "Set your API key and YouTube URL above first..."
-              : videoId
-              ? "Ask another question about this video..."
-              : "Ask a question about the video..."
+            !ready ? "set api key and url above" : "ask about this video"
           }
           disabled={!ready}
-          className="flex-1 bg-[#111] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600 focus:outline-none focus:border-green-600 disabled:opacity-40"
+          className="flex-1 bg-transparent text-sm text-[var(--text-0)] placeholder-[var(--text-3)] focus:outline-none disabled:opacity-30 font-mono"
         />
         {isActive ? (
           <button
             onClick={handleAbort}
-            className="px-5 py-2.5 text-sm bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium"
+            className="text-[10px] text-[var(--text-3)] hover:text-[var(--text-1)] font-mono transition-colors"
           >
-            Stop
+            stop
           </button>
         ) : (
           <button
             onClick={handleSubmit}
             disabled={!ready || !question.trim()}
-            className="px-5 py-2.5 text-sm bg-green-600 text-black rounded-xl font-bold hover:bg-green-500 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="text-[10px] text-[var(--text-3)] hover:text-[var(--text-1)] font-mono transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
           >
-            Send
+            send
           </button>
         )}
       </div>

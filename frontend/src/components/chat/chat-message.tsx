@@ -8,28 +8,23 @@ function ToolCall({ tool }: { tool: ToolCallInfo }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="mt-2 border border-[#2a2a2a] rounded-lg overflow-hidden">
+    <div className="mt-2">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-2 px-3 py-2 text-xs bg-[#111] hover:bg-[#1a1a1a] transition-colors text-left"
+        className="group flex items-center gap-2 text-[11px] text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors"
       >
-        <span className="text-amber-400 font-mono">{tool.name}</span>
-        <span className="text-gray-500 truncate flex-1">
-          {tool.arguments?.slice(0, 80)}
-          {(tool.arguments?.length || 0) > 80 ? "..." : ""}
-        </span>
-        <span className="text-gray-500">{expanded ? "▲" : "▼"}</span>
+        <span className="font-mono">{expanded ? "-" : "+"}</span>
+        <span className="font-mono">{tool.name}</span>
       </button>
 
-      {/* Frame grid */}
       {tool.frames && tool.frames.length > 0 && (
-        <div className="grid grid-cols-3 gap-1 p-2 bg-[#0d0d0d]">
+        <div className="grid grid-cols-3 gap-px mt-2 rounded overflow-hidden">
           {tool.frames.map((frame, i) => (
             <img
               key={i}
               src={getFrameUrl(frame)}
-              alt={`Frame ${i + 1}`}
-              className="rounded w-full aspect-video object-cover"
+              alt=""
+              className="w-full aspect-video object-cover grayscale hover:grayscale-0 transition-all duration-300"
               loading="lazy"
             />
           ))}
@@ -37,17 +32,14 @@ function ToolCall({ tool }: { tool: ToolCallInfo }) {
       )}
 
       {expanded && (
-        <div className="px-3 py-2 text-xs bg-[#0d0d0d]">
-          <pre className="text-gray-400 whitespace-pre-wrap break-words font-mono">
+        <div className="mt-1.5 pl-4 border-l border-[var(--border)]">
+          <pre className="text-[10px] text-[var(--text-3)] whitespace-pre-wrap break-words font-mono leading-relaxed">
             {tool.arguments}
           </pre>
           {tool.result && (
-            <>
-              <div className="border-t border-[#2a2a2a] my-2" />
-              <pre className="text-cyan-400/70 whitespace-pre-wrap break-words font-mono max-h-40 overflow-y-auto">
-                {tool.result}
-              </pre>
-            </>
+            <pre className="text-[10px] text-[var(--text-2)] whitespace-pre-wrap break-words font-mono mt-1 max-h-32 overflow-y-auto leading-relaxed">
+              {tool.result}
+            </pre>
           )}
         </div>
       )}
@@ -60,68 +52,67 @@ export function ChatMessageBubble({ message }: { message: ChatMessage }) {
 
   if (message.role === "user") {
     return (
-      <div className="flex justify-end mb-4">
-        <div className="bg-[#1a3a1a] border border-green-900/50 rounded-2xl rounded-br-sm px-4 py-2.5 max-w-[80%]">
-          <p className="text-sm text-green-100">{message.content}</p>
-        </div>
+      <div className="mb-6">
+        <span className="text-[10px] text-[var(--text-3)] uppercase tracking-wider">
+          you
+        </span>
+        <p className="text-sm text-[var(--text-0)] mt-1">{message.content}</p>
       </div>
     );
   }
 
   if (message.role === "status") {
     return (
-      <div className="flex justify-center mb-3">
-        <div className="bg-[#111] border border-[#2a2a2a] rounded-full px-4 py-1.5 text-xs text-blue-400">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="text-[10px] font-mono text-[var(--text-3)]">--</span>
+        <span className="text-[11px] text-[var(--text-3)]">
           {message.content}
-        </div>
+        </span>
       </div>
     );
   }
 
   if (message.role === "error") {
     return (
-      <div className="flex justify-center mb-3">
-        <div className="bg-red-950/30 border border-red-900/50 rounded-lg px-4 py-2 text-xs text-red-400">
-          {message.content}
-        </div>
+      <div className="mb-3 flex items-center gap-2">
+        <span className="text-[10px] font-mono text-[var(--text-3)]">!!</span>
+        <span className="text-[11px] text-red-400/60">{message.content}</span>
       </div>
     );
   }
 
-  // Assistant message
+  // Assistant
   return (
-    <div className="flex justify-start mb-4">
-      <div className="max-w-[85%]">
-        {/* Thinking toggle */}
-        {message.thinking && (
-          <button
-            onClick={() => setShowThinking(!showThinking)}
-            className="text-xs text-violet-400/60 hover:text-violet-400 mb-1 flex items-center gap-1 transition-colors"
-          >
-            <span>{showThinking ? "▼" : "▶"}</span>
-            <span>Thinking</span>
-          </button>
-        )}
-        {showThinking && message.thinking && (
-          <div className="bg-violet-950/20 border border-violet-900/30 rounded-lg px-3 py-2 mb-2 text-xs text-violet-300/70 whitespace-pre-wrap max-h-48 overflow-y-auto">
+    <div className="mb-6">
+      <span className="text-[10px] text-[var(--text-3)] uppercase tracking-wider">
+        dvd
+      </span>
+
+      {message.thinking && (
+        <button
+          onClick={() => setShowThinking(!showThinking)}
+          className="block text-[10px] text-[var(--text-3)] hover:text-[var(--text-2)] mt-1 transition-colors font-mono"
+        >
+          {showThinking ? "- hide reasoning" : "+ show reasoning"}
+        </button>
+      )}
+      {showThinking && message.thinking && (
+        <div className="mt-1 pl-4 border-l border-[var(--border)] max-h-40 overflow-y-auto">
+          <p className="text-[11px] text-[var(--text-3)] whitespace-pre-wrap leading-relaxed">
             {message.thinking}
-          </div>
-        )}
+          </p>
+        </div>
+      )}
 
-        {/* Tool calls */}
-        {message.toolCalls?.map((tool, i) => (
-          <ToolCall key={i} tool={tool} />
-        ))}
+      {message.toolCalls?.map((tool, i) => (
+        <ToolCall key={i} tool={tool} />
+      ))}
 
-        {/* Main content (answer) */}
-        {message.content && (
-          <div className="bg-[#111] border border-[#2a2a2a] rounded-2xl rounded-bl-sm px-4 py-2.5 mt-2">
-            <p className="text-sm text-gray-100 whitespace-pre-wrap">
-              {message.content}
-            </p>
-          </div>
-        )}
-      </div>
+      {message.content && (
+        <p className="text-sm text-[var(--text-1)] mt-2 leading-relaxed whitespace-pre-wrap">
+          {message.content}
+        </p>
+      )}
     </div>
   );
 }

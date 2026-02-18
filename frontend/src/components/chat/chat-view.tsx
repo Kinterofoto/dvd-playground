@@ -17,18 +17,16 @@ export function ChatView() {
   const isActive = isProcessing || isQuerying;
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-3xl mx-auto px-4 py-8">
         {messages.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-4xl mb-4">🎬</div>
-            <h2 className="text-lg font-bold text-gray-300 mb-1">
-              Deep Video Discovery
-            </h2>
-            <p className="text-sm text-gray-600 max-w-md mx-auto">
-              Paste a YouTube URL, enter your OpenAI API key, and ask questions
-              about any video. The AI agent will analyze frames and subtitles to
-              find answers.
+          <div className="pt-32 text-center">
+            <p className="text-xs tracking-widest uppercase text-[var(--text-3)]">
+              deep video discovery
+            </p>
+            <p className="text-[11px] text-[var(--text-3)] mt-3 max-w-sm mx-auto leading-relaxed">
+              paste a youtube url and ask questions about any video.
+              the agent analyzes frames and subtitles to find answers.
             </p>
           </div>
         )}
@@ -38,15 +36,14 @@ export function ChatView() {
         ))}
 
         {isActive && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-[#111] border border-[#2a2a2a] rounded-2xl px-4 py-3 flex items-center gap-2">
-              <div className="flex gap-1">
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce [animation-delay:0ms]" />
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce [animation-delay:150ms]" />
-                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce [animation-delay:300ms]" />
-              </div>
-              <span className="text-xs text-gray-500">
-                {isProcessing ? "Processing video..." : "Analyzing..."}
+          <div className="mb-6">
+            <span className="text-[10px] text-[var(--text-3)] uppercase tracking-wider">
+              dvd
+            </span>
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className="inline-block w-1 h-1 rounded-full bg-[var(--text-3)] animate-pulse" />
+              <span className="text-[11px] text-[var(--text-3)]">
+                {isProcessing ? "processing video" : "analyzing"}
               </span>
             </div>
           </div>

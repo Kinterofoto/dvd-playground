@@ -6,62 +6,48 @@ export function SetupBar() {
   const { apiKey, setApiKey, videoUrl, setVideoUrl, videoId, clear } =
     useChatStore();
 
-  const thumbnail = extractThumbnail(videoUrl);
-
   return (
-    <div className="border-b border-[#2a2a2a] bg-[#0d0d0d] px-4 py-3">
-      <div className="flex items-center gap-3 max-w-4xl mx-auto">
-        <h1 className="text-sm font-bold text-green-400 shrink-0">DVD</h1>
+    <div className="border-b border-[var(--border)] bg-[var(--bg-1)]">
+      <div className="flex items-center gap-4 max-w-3xl mx-auto px-4 h-11">
+        <span className="text-[10px] tracking-widest uppercase text-[var(--text-3)] shrink-0">
+          dvd
+        </span>
 
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <input
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="OpenAI API Key"
-            className="w-40 bg-[#111] border border-[#2a2a2a] rounded-lg px-3 py-1.5 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:border-green-700"
-          />
+        <div className="w-px h-4 bg-[var(--border)]" />
 
-          <div className="flex items-center gap-1 flex-1 min-w-0">
-            <input
-              type="text"
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="YouTube URL"
-              className="flex-1 min-w-0 bg-[#111] border border-[#2a2a2a] rounded-lg px-3 py-1.5 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:border-green-700"
-            />
-            {thumbnail && (
-              <img
-                src={thumbnail}
-                alt=""
-                className="h-7 w-12 rounded object-cover border border-[#2a2a2a] shrink-0"
-              />
-            )}
-          </div>
-        </div>
+        <input
+          type="password"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="api key"
+          className="w-32 bg-transparent text-xs text-[var(--text-1)] placeholder-[var(--text-3)] focus:outline-none font-mono"
+        />
+
+        <div className="w-px h-4 bg-[var(--border)]" />
+
+        <input
+          type="text"
+          value={videoUrl}
+          onChange={(e) => setVideoUrl(e.target.value)}
+          placeholder="youtube url"
+          className="flex-1 min-w-0 bg-transparent text-xs text-[var(--text-1)] placeholder-[var(--text-3)] focus:outline-none font-mono"
+        />
 
         {videoId && (
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[10px] text-cyan-500 font-mono">
+          <>
+            <div className="w-px h-4 bg-[var(--border)]" />
+            <span className="text-[10px] text-[var(--text-3)] font-mono shrink-0">
               {videoId}
             </span>
             <button
               onClick={clear}
-              className="text-[10px] text-gray-500 hover:text-gray-300 border border-[#2a2a2a] rounded px-2 py-1 transition-colors"
+              className="text-[10px] text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors"
             >
-              New
+              reset
             </button>
-          </div>
+          </>
         )}
       </div>
     </div>
   );
-}
-
-function extractThumbnail(url: string): string | null {
-  if (!url) return null;
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg`
-    : null;
 }
